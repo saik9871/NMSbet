@@ -23,7 +23,7 @@ TWITCH_CLIENT_SECRET = os.environ.get('TWITCH_CLIENT_SECRET', '4302afbtdj2ztuoxl
 # Set redirect URI based on environment
 # Railway provides RAILWAY_PUBLIC_DOMAIN environment variable
 if os.environ.get('RAILWAY_PUBLIC_DOMAIN'):
-    TWITCH_REDIRECT_URI = f"https://{os.environ.get('RAILWAY_PUBLIC_DOMAIN')}/login/authorized"
+    TWITCH_REDIRECT_URI = f"https://{os.environ.get('nmsbet.up.railway.app')}/login/authorized"
 else:
     TWITCH_REDIRECT_URI = 'http://localhost:5000/login/authorized'
 
