@@ -17,22 +17,17 @@ app.config['SESSION_TYPE'] = 'filesystem'
 ENVIRONMENT = os.environ.get('ENVIRONMENT', 'production')
 
 # Twitch OAuth configuration
-TWITCH_CLIENT_ID = '72pwbvq1rhza8ksgdjxm02vf5bhyok'
-TWITCH_CLIENT_SECRET = '4302afbtdj2ztuoxlbz2j8p4vz2alx'
+TWITCH_CLIENT_ID = os.environ.get('TWITCH_CLIENT_ID', '72pwbvq1rhza8ksgdjxm02vf5bhyok')
+TWITCH_CLIENT_SECRET = os.environ.get('TWITCH_CLIENT_SECRET', '4302afbtdj2ztuoxlbz2j8p4vz2alx')
 
 # Set redirect URI based on environment
-if 'VERCEL' in os.environ:
-    TWITCH_REDIRECT_URI = 'https://nmsbet.vercel.app/login/authorized'
-else:
-    # For local development with HTTPS (using ngrok for example)
-    TWITCH_REDIRECT_URI = 'https://[your-ngrok-url]/login/authorized'
-    # Or, if you have local SSL set up:
-    # TWITCH_REDIRECT_URI = 'https://localhost:5000/login/authorized'
+RAILWAY_URL = os.environ.get('RAILWAY_STATIC_URL', 'http://localhost:5000')
+TWITCH_REDIRECT_URI = f"{RAILWAY_URL}/login/authorized"
 
 TWITCH_SCOPE = 'user:read:email'
 
 # MongoDB Atlas configuration
-MONGO_URI = "mongodb+srv://narayanarawlo56:admin123@nmsbet.mvvie9p.mongodb.net/?retryWrites=true&w=majority&appName=NMSbet"
+MONGO_URI = os.environ.get('MONGO_URI', "mongodb+srv://narayanarawlo56:admin123@nmsbet.mvvie9p.mongodb.net/?retryWrites=true&w=majority&appName=NMSbet")
 
 # Initialize MongoDB client
 client = MongoClient(MONGO_URI)
@@ -697,4 +692,5 @@ def leaderboard():
         return redirect(url_for('dashboard'))
 
 if __name__ == '__main__':
-    app.run(debug=True) 
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port) 
