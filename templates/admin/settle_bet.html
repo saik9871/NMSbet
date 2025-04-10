@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settle Bet - NMS vs 5$tar Betting Site</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="title">NMS vs 5$tar</h1>
+            <div class="admin-badge">Admin Panel</div>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('dashboard') }}">Main Site</a></li>
+                    <li><a href="{{ url_for('admin_dashboard') }}">Admin Home</a></li>
+                    <li><a href="{{ url_for('admin_users') }}">Manage Users</a></li>
+                    <li><a href="{{ url_for('admin_bets') }}">Manage Bets</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <div class="admin-content">
+            <div class="page-header">
+                <h2>Settle Bet</h2>
+                <a href="{{ url_for('admin_bets') }}" class="admin-btn secondary">Back to Bets</a>
+            </div>
+            
+            <div class="settle-bet-container">
+                <div class="bet-details">
+                    <h3>{{ bet.title }}</h3>
+                    {% if bet.description %}
+                        <p class="bet-description">{{ bet.description }}</p>
+                    {% endif %}
+                </div>
+                
+                <form class="settle-form" method="POST" action="{{ url_for('settle_bet', bet_id=bet.id) }}">
+                    <div class="form-group">
+                        <label>Select Winning Option:</label>
+                        
+                        <div class="options-radio-group">
+                            {% for option in options %}
+                                <div class="option-radio">
+                                    <input type="radio" id="option-{{ option.id }}" name="winning_option" value="{{ option.id }}" required>
+                                    <label for="option-{{ option.id }}">{{ option.option_text }}</label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="admin-btn">Settle Bet</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <div class="flash-message">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <footer>
+        <p>&copy; 2023 NMS vs 5$tar Betting Site</p>
+    </footer>
+</body>
+</html> 

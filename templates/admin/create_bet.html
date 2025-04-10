@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Bet - NMS vs 5$tar Betting Site</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="title">NMS vs 5$tar</h1>
+            <div class="admin-badge">Admin Panel</div>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('dashboard') }}">Main Site</a></li>
+                    <li><a href="{{ url_for('admin_dashboard') }}">Admin Home</a></li>
+                    <li><a href="{{ url_for('admin_users') }}">Manage Users</a></li>
+                    <li><a href="{{ url_for('admin_bets') }}">Manage Bets</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <div class="admin-content">
+            <div class="page-header">
+                <h2>Create New Bet</h2>
+                <a href="{{ url_for('admin_bets') }}" class="admin-btn secondary">Back to Bets</a>
+            </div>
+            
+            <form class="bet-form" method="POST" action="{{ url_for('create_bet') }}">
+                <div class="form-group">
+                    <label for="title">Bet Title *</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Description (Optional)</label>
+                    <textarea id="description" name="description" rows="4"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Betting Options *</label>
+                    <p class="help-text">Add at least two options for users to bet on.</p>
+                    
+                    <div id="options-container">
+                        <div class="option-input">
+                            <input type="text" name="options[]" placeholder="Option 1" required>
+                        </div>
+                        <div class="option-input">
+                            <input type="text" name="options[]" placeholder="Option 2" required>
+                        </div>
+                    </div>
+                    
+                    <button type="button" id="add-option" class="admin-btn small">+ Add Another Option</button>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="admin-btn">Create Bet</button>
+                </div>
+            </form>
+        </div>
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <div class="flash-message">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <footer>
+        <p>&copy; 2023 NMS vs 5$tar Betting Site</p>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const optionsContainer = document.getElementById('options-container');
+            const addOptionButton = document.getElementById('add-option');
+            let optionCount = 2;
+            
+            addOptionButton.addEventListener('click', function() {
+                optionCount++;
+                
+                const newOption = document.createElement('div');
+                newOption.className = 'option-input';
+                
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.name = 'options[]';
+                input.placeholder = `Option ${optionCount}`;
+                input.required = true;
+                
+                const removeButton = document.createElement('button');
+                removeButton.type = 'button';
+                removeButton.className = 'remove-option';
+                removeButton.textContent = '×';
+                removeButton.addEventListener('click', function() {
+                    optionsContainer.removeChild(newOption);
+                });
+                
+                newOption.appendChild(input);
+                newOption.appendChild(removeButton);
+                optionsContainer.appendChild(newOption);
+            });
+        });
+    </script>
+</body>
+</html> 

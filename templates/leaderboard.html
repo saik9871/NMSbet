@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard - NMS vs 5$tar Betting Site</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="title">NMS vs 5$tar</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                    <li><a href="{{ url_for('leaderboard') }}" class="active">Leaderboard</a></li>
+                    {% if current_user and current_user.is_admin == 1 %}
+                    <li><a href="{{ url_for('admin_dashboard') }}" class="admin-link">Admin Panel</a></li>
+                    {% endif %}
+                    {% if current_user %}
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                    {% else %}
+                    <li><a href="{{ url_for('landing') }}">Login</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </header>
+
+        <div class="leaderboard-content">
+            <h2>Betting Leaderboard</h2>
+            
+            {% if current_user %}
+            <div class="current-user-stats">
+                <div class="user-rank">
+                    <span class="rank-label">Your Rank</span>
+                    <span class="rank-value">#{{ current_user.rank }}</span>
+                </div>
+                
+                <div class="user-stats">
+                    <div class="stat">
+                        <span class="stat-label">Wins</span>
+                        <span class="stat-value">{{ current_user.wins|default(0) }}</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Losses</span>
+                        <span class="stat-value">{{ current_user.losses|default(0) }}</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Win Rate</span>
+                        <span class="stat-value">{{ "%.1f"|format(current_user.win_rate|default(0)) }}%</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Profit</span>
+                        <span class="stat-value {% if current_user.profit > 0 %}profit-positive{% elif current_user.profit < 0 %}profit-negative{% endif %}">
+                            ${{ "%.2f"|format(current_user.profit|default(0)) }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <div class="leaderboard-table-container">
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>User</th>
+                            <th>Wins</th>
+                            <th>Losses</th>
+                            <th>Win Rate</th>
+                            <th>Profit</th>
+                            <th>Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in leaderboard %}
+                            <tr {% if current_user and user.id == current_user.id %}class="current-user-row"{% endif %}>
+                                <td class="rank-cell">
+                                    {% if user.rank <= 3 %}
+                                        <span class="top-rank rank-{{ user.rank }}">{{ user.rank }}</span>
+                                    {% else %}
+                                        {{ user.rank }}
+                                    {% endif %}
+                                </td>
+                                <td class="user-cell">
+                                    {% if user.profile_image_url %}
+                                        <img src="{{ user.profile_image_url }}" alt="Profile" class="leaderboard-avatar">
+                                    {% endif %}
+                                    <span class="username">{{ user.username }}</span>
+                                </td>
+                                <td>{{ user.wins|default(0) }}</td>
+                                <td>{{ user.losses|default(0) }}</td>
+                                <td>{{ "%.1f"|format(user.win_rate|default(0)) }}%</td>
+                                <td class="profit-cell {% if user.profit > 0 %}profit-positive{% elif user.profit < 0 %}profit-negative{% endif %}">
+                                    ${{ "%.2f"|format(user.profit|default(0)) }}
+                                </td>
+                                <td>${{ "%.2f"|format(user.wallet_balance|default(100)) }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <div class="flash-message">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <footer>
+        <p>&copy; 2023 NMS vs 5$tar Betting Site</p>
+    </footer>
+</body>
+</html> 

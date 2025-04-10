@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users - NMS vs 5$tar Betting Site</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="title">NMS vs 5$tar</h1>
+            <div class="admin-badge">Admin Panel</div>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('dashboard') }}">Main Site</a></li>
+                    <li><a href="{{ url_for('admin_dashboard') }}">Admin Home</a></li>
+                    <li><a href="{{ url_for('admin_users') }}" class="active">Manage Users</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <div class="admin-content">
+            <h2>Manage Users</h2>
+            
+            <div class="users-table-container">
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Wallet Balance</th>
+                            <th>Admin Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                            <tr>
+                                <td>{{ user.id }}</td>
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.email or 'N/A' }}</td>
+                                <td>${{ "%.2f"|format(user.wallet_balance) }}</td>
+                                <td>
+                                    {% if user.is_admin == 1 %}
+                                        <span class="badge admin-badge">Admin</span>
+                                    {% else %}
+                                        <span class="badge user-badge">User</span>
+                                    {% endif %}
+                                </td>
+                                <td class="actions">
+                                    {% if user.is_admin == 0 %}
+                                        <form action="{{ url_for('make_admin', user_id=user.id) }}" method="POST">
+                                            <button type="submit" class="admin-btn small">Make Admin</button>
+                                        </form>
+                                    {% else %}
+                                        <form action="{{ url_for('remove_admin', user_id=user.id) }}" method="POST">
+                                            <button type="submit" class="admin-btn small danger" {% if user.id == session.user_id %}disabled{% endif %}>
+                                                Remove Admin
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <div class="flash-message">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <footer>
+        <p>&copy; 2023 NMS vs 5$tar Betting Site</p>
+    </footer>
+</body>
+</html> 

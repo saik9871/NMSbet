@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - NMS vs 5$tar Betting Site</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="title">NMS vs 5$tar</h1>
+            <div class="admin-badge">Admin Panel</div>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('dashboard') }}">Main Site</a></li>
+                    <li><a href="{{ url_for('admin_dashboard') }}" class="active">Admin Home</a></li>
+                    <li><a href="{{ url_for('admin_users') }}">Manage Users</a></li>
+                    <li><a href="{{ url_for('admin_bets') }}">Manage Bets</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <div class="admin-content">
+            <h2>Admin Dashboard</h2>
+            
+            <div class="admin-menu">
+                <div class="admin-card">
+                    <h3>User Management</h3>
+                    <p>View and manage users, assign admin privileges</p>
+                    <a href="{{ url_for('admin_users') }}" class="admin-btn">Manage Users</a>
+                </div>
+                
+                <div class="admin-card">
+                    <h3>Bet Management</h3>
+                    <p>Create and manage betting events, settle bets</p>
+                    <a href="{{ url_for('admin_bets') }}" class="admin-btn">Manage Bets</a>
+                </div>
+            </div>
+        </div>
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <div class="flash-message">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <footer>
+        <p>&copy; 2023 NMS vs 5$tar Betting Site</p>
+    </footer>
+</body>
+</html> 
