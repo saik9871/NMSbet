@@ -10,10 +10,10 @@ from bson.objectid import ObjectId
 
 # Initialize Flask app
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.urandom(24)
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', os.urandom(24))
 app.config['SESSION_TYPE'] = 'filesystem'
 
-# Determine environment (you may need to set an environment variable in Vercel)
+# Determine environment (Railway or local)
 ENVIRONMENT = os.environ.get('ENVIRONMENT', 'production')
 
 # Twitch OAuth configuration
@@ -21,8 +21,11 @@ TWITCH_CLIENT_ID = os.environ.get('TWITCH_CLIENT_ID', '72pwbvq1rhza8ksgdjxm02vf5
 TWITCH_CLIENT_SECRET = os.environ.get('TWITCH_CLIENT_SECRET', '4302afbtdj2ztuoxlbz2j8p4vz2alx')
 
 # Set redirect URI based on environment
-RAILWAY_URL = os.environ.get('RAILWAY_STATIC_URL', 'http://localhost:5000')
-TWITCH_REDIRECT_URI = f"{RAILWAY_URL}/login/authorized"
+# Railway provides RAILWAY_PUBLIC_DOMAIN environment variable
+if os.environ.get('RAILWAY_PUBLIC_DOMAIN'):
+    TWITCH_REDIRECT_URI = f"https://{os.environ.get('RAILWAY_PUBLIC_DOMAIN')}/login/authorized"
+else:
+    TWITCH_REDIRECT_URI = 'http://localhost:5000/login/authorized'
 
 TWITCH_SCOPE = 'user:read:email'
 
