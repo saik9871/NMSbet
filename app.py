@@ -13,10 +13,22 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
 app.config['SESSION_TYPE'] = 'filesystem'
 
+# Determine environment (you may need to set an environment variable in Vercel)
+ENVIRONMENT = os.environ.get('ENVIRONMENT', 'production')
+
 # Twitch OAuth configuration
 TWITCH_CLIENT_ID = '72pwbvq1rhza8ksgdjxm02vf5bhyok'
 TWITCH_CLIENT_SECRET = '4302afbtdj2ztuoxlbz2j8p4vz2alx'
-TWITCH_REDIRECT_URI = 'http://localhost:5000/login/authorized'
+
+# Set redirect URI based on environment
+if 'VERCEL' in os.environ:
+    TWITCH_REDIRECT_URI = 'https://nmsbet.vercel.app/login/authorized'
+else:
+    # For local development with HTTPS (using ngrok for example)
+    TWITCH_REDIRECT_URI = 'https://[your-ngrok-url]/login/authorized'
+    # Or, if you have local SSL set up:
+    # TWITCH_REDIRECT_URI = 'https://localhost:5000/login/authorized'
+
 TWITCH_SCOPE = 'user:read:email'
 
 # MongoDB Atlas configuration
