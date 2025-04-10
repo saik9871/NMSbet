@@ -45,7 +45,7 @@
                 {% if bets %}
                     <div class="bets-grid">
                         {% for bet in bets %}
-                            <div class="bet-card" id="bet-card-{{ bet.id }}">
+                            <div class="bet-card" id="bet-card-{{ bet._id }}">
                                 <div class="bet-card-header">
                                     <h4>{{ bet.title }}</h4>
                                     <span class="bet-status {{ bet.status }}">{{ bet.status }}</span>
@@ -60,8 +60,8 @@
                                     <div class="betting-options-list">
                                         {% for option in bet.options %}
                                             <div class="betting-option">
-                                                <input type="radio" name="bet-option-{{ bet.id }}" id="option-{{ bet.id }}-{{ option.id }}" value="{{ option.id }}">
-                                                <label for="option-{{ bet.id }}-{{ option.id }}">{{ option.option_text }}</label>
+                                                <input type="radio" name="bet-option-{{ bet._id }}" id="option-{{ bet._id }}-{{ option._id }}" value="{{ option._id }}">
+                                                <label for="option-{{ bet._id }}-{{ option._id }}">{{ option.option_text }}</label>
                                             </div>
                                         {% endfor %}
                                     </div>
@@ -74,13 +74,13 @@
                                 
                                 <div class="bet-actions">
                                     <div class="bet-amount">
-                                        <label for="amount-{{ bet.id }}">Bet Amount: $</label>
-                                        <input type="number" id="amount-{{ bet.id }}" min="1" max="{{ user.wallet_balance }}" value="10" step="1">
+                                        <label for="amount-{{ bet._id }}">Bet Amount: $</label>
+                                        <input type="number" id="amount-{{ bet._id }}" min="1" max="{{ user.wallet_balance }}" value="10" step="1">
                                     </div>
                                     <button class="bet-btn" onclick="placeBet('{{ bet._id }}')">Place Bet</button>
                                 </div>
                                 
-                                <div class="bet-message" id="bet-message-{{ bet.id }}"></div>
+                                <div class="bet-message" id="bet-message-{{ bet._id }}"></div>
                             </div>
                         {% endfor %}
                     </div>

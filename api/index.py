@@ -1,5 +1,8 @@
 from app import app
 
-# This is important for Vercel serverless functions
-def handler(request, response):
-    return app(request, response)
+# This is the proper handler for Vercel serverless functions with Flask
+from flask import Flask
+
+# Export the app for Vercel serverless functions
+# Vercel looks for a handler variable
+handler = app.wsgi_app
